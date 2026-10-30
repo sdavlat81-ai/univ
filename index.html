@@ -98,24 +98,52 @@ footer{text-align:center;color:#8996a8;padding:25px}
 </main>
 <footer>© 2026 Universal AI</footer>
 <script>
-const form=document.getElementById('form');
-const chat=document.getElementById('chat');
-const input=document.getElementById('question');
+const form = document.getElementById('form');
+const chat = document.getElementById('chat');
+const input = document.getElementById('question');
 
-form.addEventListener('submit',function(e){
- e.preventDefault();
- const message=input.value.trim();
- if(!message)return;
- const item=document.createElement('div');
- item.className='message';
- item.textContent='Siz: '+message;
- chat.appendChild(item);
- const reply=document.createElement('div');
- reply.className='message';
- reply.textContent='Xabaringiz qabul qilindi. AI tizimi keyingi bosqichda ulanadi.';
- chat.appendChild(reply);
- input.value='';
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const message = input.value.trim();
+  if (!message) return;
+
+  const user = document.createElement('div');
+  user.className = 'message';
+  user.textContent = 'Siz: ' + message;
+  chat.appendChild(user);
+
+  input.value = '';
+
+  const loading = document.createElement('div');
+  loading.className = 'message';
+  loading.textContent = 'Universal AI javob tayyorlamoqda...';
+  chat.appendChild(loading);
+
+  try {
+    const response = await fetch(
+      '/.netlify/functions/chat',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Server xatosi');
+    }
+
+    loading.textContent = data.reply;
+  } catch (error) {
+    loading.textContent =
+      'Server bilan bog‘lanishda xatolik: ' + error.message;
+  }
 });
 </script>
-</body>
-</html>
+
+
