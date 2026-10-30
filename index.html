@@ -145,5 +145,28 @@ form.addEventListener('submit', async (e) => {
   }
 });
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA5cXhM_tw9Hj88G_dtfwfd1mIweqiJstU",
+    authDomain: "universal-ai-f2b16.firebaseapp.com",
+    projectId: "universal-ai-f2b16",
+    storageBucket: "universal-ai-f2b16.firebasestorage.app",
+    messagingSenderId: "567057193757",
+    appId: "1:567057193757:web:d18114a0b83a98cb4c1ff4",
+    measurementId: "G-7QZYXTXDN4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.firebaseApp = app;
+  window.firebaseDB = db;
+
+  console.log("Universal AI Firebase bilan ulandi!");
+</script>
+
 
 
