@@ -5,107 +5,180 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Universal AI</title>
+
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;
- background:#080d18;
- color:white;
- font-family:Arial,sans-serif;
+* {
+  box-sizing: border-box;
 }
-header{
- padding:22px;
- text-align:center;
- border-bottom:1px solid #26334a;
+
+body {
+  margin: 0;
+  background: #080d18;
+  color: white;
+  font-family: Arial, sans-serif;
 }
-.logo{
- color:#d8b45a;
- font-size:29px;
- font-weight:bold;
+
+header {
+  padding: 22px;
+  text-align: center;
+  border-bottom: 1px solid #26334a;
 }
-.sub{color:#9aa9bd;margin-top:8px}
-main{
- max-width:700px;
- margin:40px auto;
- padding:20px;
+
+.logo {
+  color: #d8b45a;
+  font-size: 29px;
+  font-weight: bold;
 }
-.welcome{
- text-align:center;
- padding:35px 10px;
+
+.sub {
+  color: #9aa9bd;
+  margin-top: 8px;
 }
-.welcome h1{font-size:30px}
-.welcome span{color:#e2bd65}
-.chat{
- min-height:280px;
- padding:18px;
- background:#111b2c;
- border:1px solid #33445e;
- border-radius:18px;
+
+main {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
 }
-.message{
- background:#1c2b42;
- padding:14px;
- border-radius:12px;
- margin:12px 0;
- line-height:1.6;
+
+.welcome {
+  text-align: center;
+  padding: 35px 10px;
 }
-form{
- display:flex;
- gap:8px;
- margin-top:15px;
+
+.welcome h1 {
+  font-size: 30px;
 }
-input{
- flex:1;
- min-width:0;
- padding:15px;
- border-radius:12px;
- border:1px solid #455674;
- background:#111b2c;
- color:white;
- font-size:16px;
+
+.welcome span {
+  color: #e2bd65;
 }
-button{
- background:#d8b45a;
- border:0;
- border-radius:12px;
- padding:14px 18px;
- font-weight:bold;
+
+.chat {
+  min-height: 280px;
+  padding: 18px;
+  background: #111b2c;
+  border: 1px solid #33445e;
+  border-radius: 18px;
 }
-footer{text-align:center;color:#8996a8;padding:25px}
+
+.message {
+  background: #1c2b42;
+  padding: 14px;
+  border-radius: 12px;
+  margin: 12px 0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #455674;
+  background: #111b2c;
+  color: white;
+  font-size: 16px;
+}
+
+button {
+  background: #d8b45a;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+footer {
+  text-align: center;
+  color: #8996a8;
+  padding: 25px;
+}
+
+@media (max-width: 480px) {
+  main {
+    margin: 15px auto;
+    padding: 12px;
+  }
+
+  .welcome h1 {
+    font-size: 25px;
+  }
+
+  form {
+    gap: 6px;
+  }
+
+  button {
+    padding: 12px;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <header>
- <div class="logo">✦ UNIVERSAL AI</div>
- <div class="sub">Your Universal Intelligent Assistant</div>
+  <div class="logo">✦ UNIVERSAL AI</div>
+  <div class="sub">Your Universal Intelligent Assistant</div>
 </header>
+
 <main>
- <section class="welcome">
-  <h1>Salom! Men <span>Universal AI</span></h1>
-  <p>Sizning aqlli universal yordamchingiz.</p>
-  <p>Ask me anything. Any language.</p>
- </section>
- <div class="chat" id="chat">
-  <div class="message">
-   Assalomu alaykum! Men Universal AI.
-   Sizga qanday yordam bera olaman?
+
+  <section class="welcome">
+    <h1>Salom! Men <span>Universal AI</span></h1>
+    <p>Sizning aqlli universal yordamchingiz.</p>
+    <p>Ask me anything. Any language.</p>
+  </section>
+
+  <div class="chat" id="chat">
+    <div class="message">
+      Assalomu alaykum! Men Universal AI.
+      Sizga qanday yordam bera olaman?
+    </div>
   </div>
- </div>
- <form id="form">
-  <input id="question" placeholder="Xabaringizni yozing..." required>
-  <button type="submit">Yuborish</button>
- </form>
+
+  <form id="form">
+    <input
+      id="question"
+      placeholder="Xabaringizni yozing..."
+      autocomplete="off"
+      required
+    >
+    <button id="sendButton" type="submit">
+      Yuborish
+    </button>
+  </form>
+
 </main>
+
 <footer>© 2026 Universal AI</footer>
+
 <script>
 const form = document.getElementById('form');
 const chat = document.getElementById('chat');
 const input = document.getElementById('question');
+const sendButton = document.getElementById('sendButton');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const message = input.value.trim();
+
   if (!message) return;
 
   const user = document.createElement('div');
@@ -114,6 +187,7 @@ form.addEventListener('submit', async (e) => {
   chat.appendChild(user);
 
   input.value = '';
+  sendButton.disabled = true;
 
   const loading = document.createElement('div');
   loading.className = 'message';
@@ -121,16 +195,15 @@ form.addEventListener('submit', async (e) => {
   chat.appendChild(loading);
 
   try {
-    const response = await fetch(
-      '/.netlify/functions/chat',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ message })
-      }
-    );
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: message
+      })
+    });
 
     const data = await response.json();
 
@@ -138,35 +211,45 @@ form.addEventListener('submit', async (e) => {
       throw new Error(data.error || 'Server xatosi');
     }
 
-    loading.textContent = data.reply;
+    loading.textContent = data.reply || 'Javob olinmadi.';
+
   } catch (error) {
     loading.textContent =
       'Server bilan bog‘lanishda xatolik: ' + error.message;
+  } finally {
+    sendButton.disabled = false;
+    input.focus();
   }
 });
 </script>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyA5cXhM_tw9Hj88G_dtfwfd1mIweqiJstU",
-    authDomain: "universal-ai-f2b16.firebaseapp.com",
-    projectId: "universal-ai-f2b16",
-    storageBucket: "universal-ai-f2b16.firebasestorage.app",
-    messagingSenderId: "567057193757",
-    appId: "1:567057193757:web:d18114a0b83a98cb4c1ff4",
-    measurementId: "G-7QZYXTXDN4"
-  };
+import {
+  getFirestore
+} from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const firebaseConfig = {
+  apiKey: "AIzaSyA5cXhM_tw9Hj88G_dtfwfd1mIweqiJstU",
+  authDomain: "universal-ai-f2b16.firebaseapp.com",
+  projectId: "universal-ai-f2b16",
+  storageBucket: "universal-ai-f2b16.firebasestorage.app",
+  messagingSenderId: "567057193757",
+  appId: "1:567057193757:web:d18114a0b83a98cb4c1ff4",
+  measurementId: "G-7QZYXTXDN4"
+};
 
-  window.firebaseApp = app;
-  window.firebaseDB = db;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  console.log("Universal AI Firebase bilan ulandi!");
+window.firebaseApp = app;
+window.firebaseDB = db;
+
+console.log("Universal AI Firebase bilan ulandi!");
 </script>
 
-
-
+</body>
+</html>
