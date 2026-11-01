@@ -3,126 +3,190 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07152e">
 <title>Universal AI</title>
 <style>
 *{box-sizing:border-box}
 body{
  margin:0;
  font-family:Arial,sans-serif;
- background:#101827;
- color:white;
+ color:#eef6ff;
+ background:radial-gradient(circle at 50% 15%,#153b70,#091a35 48%,#050d1d);
+ min-height:100vh;
 }
 header{
- background:#17243a;
  padding:20px;
  text-align:center;
- border-bottom:1px solid #30415e;
+ border-bottom:1px solid #24466c;
+ background:#09172ee8;
 }
-header h1{margin:0;color:#60a5fa}
-header p{color:#cbd5e1}
-main{
- max-width:800px;
+.logo{
+ font-size:27px;
+ font-weight:bold;
+ color:#64caff;
+ letter-spacing:1px;
+}
+header p{color:#a8c5e6;font-size:13px}
+main{max-width:850px;margin:auto;padding:18px}
+.panel{
+ background:#102746cc;
+ border:1px solid #28517c;
+ border-radius:20px;
+ padding:18px;
+ box-shadow:0 10px 40px #0005;
+}
+.assistant{
+ text-align:center;
+ padding:15px 0 20px;
+}
+.orb{
+ width:130px;
+ height:130px;
  margin:auto;
- padding:15px;
+ border-radius:50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:53px;
+ background:radial-gradient(circle,#40bfff,#1261bd 55%,#09244c);
+ box-shadow:0 0 25px #168dff,0 0 65px #0875ff55;
+ border:2px solid #7bd6ff;
 }
+.orb.listening{
+ animation:pulse 1.2s infinite;
+}
+@keyframes pulse{
+ 50%{transform:scale(1.09);box-shadow:0 0 45px #20c8ff,0 0 90px #168dff}
+}
+.assistant h2{margin:17px 0 5px}
+.assistant p{color:#a9c9ed;font-size:14px}
 #chat{
- height:55vh;
- min-height:300px;
+ height:310px;
  overflow-y:auto;
- background:#17243a;
+ padding:12px;
+ background:#071a32;
+ border:1px solid #24476e;
  border-radius:15px;
- padding:15px;
 }
 .message{
- padding:12px;
+ padding:12px 14px;
  margin:10px 0;
- border-radius:12px;
- line-height:1.5;
+ border-radius:14px;
+ line-height:1.55;
  white-space:pre-wrap;
  overflow-wrap:anywhere;
 }
 .user{
- background:#2563eb;
- margin-left:15%;
+ background:#1767c4;
+ margin-left:12%;
 }
 .ai{
- background:#293951;
- margin-right:15%;
+ background:#193654;
+ margin-right:12%;
+ border:1px solid #31577b;
 }
 form{
  display:flex;
  gap:8px;
- margin-top:15px;
+ margin-top:13px;
 }
 input{
  flex:1;
  min-width:0;
  padding:15px;
- border-radius:10px;
- border:0;
+ border-radius:12px;
+ border:1px solid #37618b;
+ background:#091a30;
+ color:white;
  font-size:16px;
+ outline:none;
 }
 button{
  border:0;
- border-radius:10px;
- padding:13px 17px;
- background:#2563eb;
+ border-radius:12px;
+ padding:13px 16px;
+ background:linear-gradient(135deg,#168dff,#0751b5);
  color:white;
  font-size:15px;
+ font-weight:bold;
  cursor:pointer;
 }
 button:disabled{opacity:.5}
 .controls{
  display:flex;
+ justify-content:center;
  gap:10px;
- margin-top:12px;
  flex-wrap:wrap;
+ margin-top:15px;
 }
+.controls button{min-width:145px}
 #status{
- color:#93c5fd;
- margin-top:12px;
+ text-align:center;
+ color:#72caff;
+ margin:15px 0 5px;
  min-height:22px;
+ font-size:14px;
 }
 footer{
  text-align:center;
+ color:#7595b8;
  padding:20px;
- color:#94a3b8;
+ font-size:12px;
+}
+@media(max-width:500px){
+ main{padding:12px}
+ .orb{width:110px;height:110px;font-size:45px}
+ #chat{height:300px}
+ form button{padding:12px}
 }
 </style>
 </head>
 <body>
 
 <header>
-<h1>🌍 Universal AI</h1>
-<p>Ko‘p tilli sun’iy intellekt yordamchisi</p>
+ <div class="logo">🌍 UNIVERSAL AI</div>
+ <p>YOUR INTELLIGENT AI ASSISTANT</p>
 </header>
 
 <main>
-<div id="chat">
- <div class="message ai">
- Salom! Men Universal AI.
- Sizga qanday yordam bera olaman?
+ <div class="panel">
+
+  <section class="assistant">
+   <div class="orb" id="orb">🤖</div>
+   <h2>Universal AI</h2>
+   <p>Men sizni tinglashga va yordam berishga tayyorman.</p>
+  </section>
+
+  <div id="chat">
+   <div class="message ai">
+    Salom! Men Universal AI.
+    Menga yozishingiz yoki ovoz orqali savol berishingiz mumkin.
+   </div>
+  </div>
+
+  <form id="form">
+   <input id="question"
+    placeholder="Universal AI ga yozing..."
+    autocomplete="off"
+    required>
+   <button id="sendButton" type="submit">➤</button>
+  </form>
+
+  <div class="controls">
+   <button type="button" id="micButton">🎙️ Gapirish</button>
+   <button type="button" id="voiceButton">🔊 Ovoz yoqilgan</button>
+   <button type="button" id="stopButton">⏹ To‘xtatish</button>
+  </div>
+
+  <div id="status">● Universal AI tayyor</div>
+
  </div>
-</div>
-
-<form id="form">
- <input id="question"
- placeholder="Xabaringizni yozing..."
- autocomplete="off"
- required>
- <button id="sendButton" type="submit">Yuborish</button>
-</form>
-
-<div class="controls">
- <button type="button" id="micButton">🎙️ Gapirish</button>
- <button type="button" id="voiceButton">🔊 Ovozni yoqish</button>
-</div>
-
-<div id="status">Universal AI tayyor.</div>
 </main>
 
-<footer>Universal AI © 2026</footer>
+<footer>
+ Universal AI © 2026 | Artificial Intelligence
+</footer>
 
 <script>
 const chat=document.getElementById("chat");
@@ -132,8 +196,13 @@ const statusText=document.getElementById("status");
 const sendButton=document.getElementById("sendButton");
 const micButton=document.getElementById("micButton");
 const voiceButton=document.getElementById("voiceButton");
+const stopButton=document.getElementById("stopButton");
+const orb=document.getElementById("orb");
 
 let voiceEnabled=true;
+let recognition=null;
+let listening=false;
+let speaking=false;
 
 function addMessage(text,type){
  const div=document.createElement("div");
@@ -150,24 +219,40 @@ function speak(text){
 
  const utterance=new SpeechSynthesisUtterance(text);
  utterance.lang="uz-UZ";
- utterance.rate=1;
+ utterance.rate=0.95;
  utterance.pitch=0.85;
 
  const voices=speechSynthesis.getVoices();
- const maleVoice=voices.find(v=>
+ const male=voices.find(v=>
   /male|david|mark|daniel/i.test(v.name)
  );
 
- if(maleVoice) utterance.voice=maleVoice;
+ if(male)utterance.voice=male;
+
+ utterance.onstart=()=>{
+  speaking=true;
+  statusText.textContent="🔊 AI gapiryapti...";
+  orb.classList.add("listening");
+ };
+
+ utterance.onend=()=>{
+  speaking=false;
+  orb.classList.remove("listening");
+  statusText.textContent="● Universal AI tayyor";
+ };
+
+ utterance.onerror=()=>{
+  speaking=false;
+  orb.classList.remove("listening");
+ };
 
  speechSynthesis.speak(utterance);
 }
 
-form.addEventListener("submit",async function(e){
- e.preventDefault();
+async function sendMessage(message){
+ if(!message || sendButton.disabled)return;
 
- const message=question.value.trim();
- if(!message)return;
+ if(speechSynthesis) speechSynthesis.cancel();
 
  addMessage(message,"user");
  question.value="";
@@ -178,40 +263,44 @@ form.addEventListener("submit",async function(e){
   const response=await fetch("/api/chat",{
    method:"POST",
    headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({message:message})
+   body:JSON.stringify({message})
   });
 
   const data=await response.json();
 
   if(!response.ok){
-   throw new Error(data.error || "Server xatoligi");
+   throw new Error(data.error || "Server xatosi");
   }
 
-  const answer=
-   data.reply ||
-   data.message ||
-   data.output_text ||
-   data.response ||
-   "Javob olinmadi.";
+  const answer=data.reply ||
+    data.message ||
+    data.output_text ||
+    "Javob olinmadi.";
 
   addMessage(answer,"ai");
   speak(answer);
-  statusText.textContent="Tayyor.";
+
+  if(!voiceEnabled){
+   statusText.textContent="● Javob tayyor";
+  }
 
  }catch(error){
   addMessage("Xatolik: "+error.message,"ai");
-  statusText.textContent="Server bilan bog‘lanib bo‘lmadi.";
+  statusText.textContent="Server bilan aloqa xatosi.";
  }finally{
   sendButton.disabled=false;
-  question.focus();
  }
+}
+
+form.addEventListener("submit",e=>{
+ e.preventDefault();
+ sendMessage(question.value.trim());
 });
 
+// Ovozli tanish
 const SpeechRecognition=
  window.SpeechRecognition ||
  window.webkitSpeechRecognition;
-
-let recognition=null;
 
 if(SpeechRecognition){
  recognition=new SpeechRecognition();
@@ -220,39 +309,54 @@ if(SpeechRecognition){
  recognition.interimResults=false;
 
  recognition.onstart=()=>{
-  statusText.textContent="Sizni tinglayapman...";
+  listening=true;
+  micButton.textContent="⏹ Tinglash...";
+  orb.classList.add("listening");
+  statusText.textContent="🎙️ Sizni tinglayapman...";
  };
 
- recognition.onresult=(event)=>{
-  question.value=event.results[0][0].transcript;
-  statusText.textContent="Xabar tayyor. Yuborishingiz mumkin.";
+ recognition.onresult=event=>{
+  const text=event.results[0][0].transcript;
+  question.value=text;
+  listening=false;
+  orb.classList.remove("listening");
+  sendMessage(text);
  };
 
- recognition.onerror=()=>{
-  statusText.textContent="Mikrofon xatoligi.";
+ recognition.onerror=event=>{
+  listening=false;
+  orb.classList.remove("listening");
+  micButton.textContent="🎙️ Gapirish";
+  statusText.textContent=
+   event.error==="not-allowed"
+   ? "Mikrofon ruxsatini yoqing."
+   : "Ovozli tanish xatosi: "+event.error;
  };
 
  recognition.onend=()=>{
+  listening=false;
   micButton.textContent="🎙️ Gapirish";
+  orb.classList.remove("listening");
  };
 }
 
 micButton.addEventListener("click",()=>{
  if(!recognition){
-  statusText.textContent="Bu brauzer ovozli kiritishni qo‘llamaydi.";
+  statusText.textContent=
+   "Brauzeringiz ovozli tanishni qo‘llamaydi.";
+  return;
+ }
+
+ if(listening){
+  recognition.stop();
   return;
  }
 
  try{
-  if(micButton.textContent.includes("Gapirish")){
-   recognition.start();
-   micButton.textContent="⏹️ To‘xtatish";
-  }else{
-   recognition.stop();
-   micButton.textContent="🎙️ Gapirish";
-  }
+  if(speechSynthesis)speechSynthesis.cancel();
+  recognition.start();
  }catch(error){
-  statusText.textContent="Mikrofonni qayta ishga tushiring.";
+  statusText.textContent="Mikrofonni qayta yoqing.";
  }
 });
 
@@ -267,7 +371,27 @@ voiceButton.addEventListener("click",()=>{
   statusText.textContent="Ovoz yoqildi.";
  }
 });
-</script>
 
+stopButton.addEventListener("click",()=>{
+ if(listening && recognition){
+  recognition.stop();
+ }
+ if(speechSynthesis){
+  speechSynthesis.cancel();
+ }
+ listening=false;
+ speaking=false;
+ orb.classList.remove("listening");
+ micButton.textContent="🎙️ Gapirish";
+ statusText.textContent="Suhbat to‘xtatildi.";
+});
+
+if("speechSynthesis" in window){
+ speechSynthesis.getVoices();
+ speechSynthesis.onvoiceschanged=()=>{
+  speechSynthesis.getVoices();
+ };
+}
+</script>
 </body>
 </html>
