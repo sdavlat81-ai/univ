@@ -37,17 +37,17 @@ header {
 
 main {
   max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: 30px auto;
+  padding: 15px;
 }
 
 .welcome {
   text-align: center;
-  padding: 35px 10px;
+  padding: 25px 10px;
 }
 
 .welcome h1 {
-  font-size: 30px;
+  font-size: 29px;
 }
 
 .welcome span {
@@ -55,7 +55,9 @@ main {
 }
 
 .chat {
-  min-height: 280px;
+  min-height: 300px;
+  max-height: 55vh;
+  overflow-y: auto;
   padding: 18px;
   background: #111b2c;
   border: 1px solid #33445e;
@@ -91,16 +93,42 @@ input {
 
 button {
   background: #d8b45a;
+  color: #101827;
   border: 0;
   border-radius: 12px;
-  padding: 14px 18px;
+  padding: 13px 15px;
   font-weight: bold;
   cursor: pointer;
 }
 
 button:disabled {
   opacity: 0.6;
-  cursor: not-allowed;
+}
+
+.voice-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.voice-controls button {
+  flex: 1;
+}
+
+#micButton {
+  background: #d8b45a;
+}
+
+#voiceButton {
+  background: #263954;
+  color: white;
+}
+
+.status {
+  text-align: center;
+  color: #9aa9bd;
+  font-size: 13px;
+  margin-top: 12px;
 }
 
 footer {
@@ -111,12 +139,12 @@ footer {
 
 @media (max-width: 480px) {
   main {
-    margin: 15px auto;
+    margin: 12px auto;
     padding: 12px;
   }
 
   .welcome h1 {
-    font-size: 25px;
+    font-size: 24px;
   }
 
   form {
@@ -139,30 +167,44 @@ footer {
 
 <main>
 
-  <section class="welcome">
-    <h1>Salom! Men <span>Universal AI</span></h1>
-    <p>Sizning aqlli universal yordamchingiz.</p>
-    <p>Ask me anything. Any language.</p>
-  </section>
+<section class="welcome">
+  <h1>Salom! Men <span>Universal AI</span></h1>
+  <p>Sizning aqlli universal yordamchingiz.</p>
+  <p>Istalgan tilda savol bering.</p>
+</section>
 
-  <div class="chat" id="chat">
-    <div class="message">
-      Assalomu alaykum! Men Universal AI.
-      Sizga qanday yordam bera olaman?
-    </div>
+<div class="chat" id="chat">
+  <div class="message">
+    Assalomu alaykum! Men Universal AI.
+    Sizga qanday yordam bera olaman?
   </div>
+</div>
 
-  <form id="form">
-    <input
-      id="question"
-      placeholder="Xabaringizni yozing..."
-      autocomplete="off"
-      required
-    >
-    <button id="sendButton" type="submit">
-      Yuborish
-    </button>
-  </form>
+<form id="form">
+  <input
+    id="question"
+    placeholder="Xabaringizni yozing..."
+    autocomplete="off"
+    required
+  >
+  <button id="sendButton" type="submit">
+    Yuborish
+  </button>
+</form>
+
+<div class="voice-controls">
+  <button id="micButton" type="button">
+    🎙️ Gapirish
+  </button>
+
+  <button id="voiceButton" type="button">
+    🔊 Ovoz yoqilgan
+  </button>
+</div>
+
+<div class="status" id="status">
+  Universal AI tayyor.
+</div>
 
 </main>
 
@@ -173,6 +215,97 @@ const form = document.getElementById('form');
 const chat = document.getElementById('chat');
 const input = document.getElementById('question');
 const sendButton = document.getElementById('sendButton');
+const micButton = document.getElementById('micButton');
+const voiceButton = document.getElementById('voiceButton');
+const statusBox = document.getElementById('status');
+
+let voiceEnabled = true;
+let recognition = null;
+let isListening = false;
+
+voiceButton.addEventListener('click', () => {
+  voiceEnabled = !voiceEnabled;
+
+  voiceButton.textContent = voiceEnabled
+    ? '🔊 Ovoz yoqilgan'
+    : '🔇 Ovoz o‘chirilgan';
+
+  if (!voiceEnabled && window.speechSynthesis) {
+    speechSynthesis.cancel();
+  }
+});
+
+function speakText(text) {
+  if (!voiceEnabled || !('speechSynthesis' in window)) {
+    return;
+  }
+
+  speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = 'uz-UZ';
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  speechSynthesis.speak(speech);
+}
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+
+  recognition.lang = 'uz-UZ';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onstart = () => {
+    isListening = true;
+    micButton.textContent = '🎙️ Tinglayapman...';
+    statusBox.textContent = 'Sizni tinglayapman...';
+  };
+
+  recognition.onresult = (event) => {
+    const spokenText =
+      event.results[0][0].transcript;
+
+    input.value = spokenText;
+    statusBox.textContent = 'Ovoz matnga aylantirildi.';
+    form.requestSubmit();
+  };
+
+  recognition.onerror = (event) => {
+    statusBox.textContent =
+      'Mikrofon xatosi: ' + event.error;
+  };
+
+  recognition.onend = () => {
+    isListening = false;
+    micButton.textContent = '🎙️ Gapirish';
+  };
+
+  micButton.addEventListener('click', () => {
+    if (isListening) {
+      recognition.stop();
+      return;
+    }
+
+    try {
+      recognition.start();
+    } catch (error) {
+      statusBox.textContent =
+        'Mikrofonni qayta ishga tushiring.';
+    }
+  });
+
+} else {
+  micButton.addEventListener('click', () => {
+    statusBox.textContent =
+      'Brauzeringiz ovozli kiritishni qo‘llab-quvvatlamaydi.';
+  });
+}
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -191,8 +324,13 @@ form.addEventListener('submit', async (e) => {
 
   const loading = document.createElement('div');
   loading.className = 'message';
-  loading.textContent = 'Universal AI javob tayyorlamoqda...';
+  loading.textContent =
+    'Universal AI javob tayyorlamoqda...';
+
   chat.appendChild(loading);
+  chat.scrollTop = chat.scrollHeight;
+
+  statusBox.textContent = 'AI javob bermoqda...';
 
   try {
     const response = await fetch('/api/chat', {
@@ -208,17 +346,30 @@ form.addEventListener('submit', async (e) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || 'Server xatosi');
+      throw new Error(
+        data.error || 'Server xatosi'
+      );
     }
 
-    loading.textContent = data.reply || 'Javob olinmadi.';
+    const reply = data.reply || 'Javob olinmadi.';
+
+    loading.textContent = reply;
+
+    statusBox.textContent = 'Javob tayyor.';
+
+    speakText(reply);
 
   } catch (error) {
     loading.textContent =
-      'Server bilan bog‘lanishda xatolik: ' + error.message;
+      'Server bilan bog‘lanishda xatolik: ' +
+      error.message;
+
+    statusBox.textContent = 'Xatolik yuz berdi.';
+
   } finally {
     sendButton.disabled = false;
     input.focus();
+    chat.scrollTop = chat.scrollHeight;
   }
 });
 </script>
