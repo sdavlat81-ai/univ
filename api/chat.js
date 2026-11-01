@@ -1,38 +1,46 @@
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Faqat POST so'rovi"
-    });
+    return res.status(405).json({ error: "Faqat POST so'rovi" });
   }
 
   try {
     const message = req.body?.message;
 
     if (typeof message !== "string" || !message.trim()) {
-      return res.status(400).json({
-        error: "Xabar bo'sh"
-      });
+      return res.status(400).json({ error: "Xabar bo'sh" });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.OPENROUTER_API_KEY;
 
     if (!apiKey) {
       return res.status(500).json({
-        error: "OPENAI_API_KEY sozlanmagan"
+        error: "OPENROUTER_API_KEY sozlanmagan"
       });
     }
 
     const response = await fetch(
-      "https://api.openai.com/v1/responses",
+      "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
+          "Authorization": `Bearer ${apiKey}`,
+          "HTTP-Referer": "https://univ-gilt.vercel.app/",
+          "X-Title": "Universal AI"
         },
         body: JSON.stringify({
-          model: "gpt-6-luna",
-          input: message
+          model: "openrouter/free",
+          messages: [
+            {
+              role: "system",
+              content: "Sen Universal AI nomli foydali, muloyim va ko'p tilli yordamchisan. Foydalanuvchiga uning tilida javob ber."
+            },
+            {
+              role: "user",
+              content: message
+            }
+          ]
         })
       }
     );
@@ -41,12 +49,12 @@ module.exports = async (req, res) => {
 
     if (!response.ok) {
       return res.status(response.status).json({
-        error: data.error?.message || "OpenAI xatosi"
+        error: data.error?.message || "OpenRouter xatosi"
       });
     }
 
     return res.status(200).json({
-      reply: data.output_text || "Javob olinmadi."
+      reply: data.choices?.[0]?.message?.content || "Javob olinmadi."
     });
 
   } catch (error) {
